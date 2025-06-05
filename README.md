@@ -10,9 +10,8 @@ A SaaS restaurant system that enables QR code-based customer ordering and kitche
 ## Setup
 
 ```bash
-git clone <repo-url>
-cd restaurant-saas
-npm install
+git clone https://github.com/muratselcuk/restaurant-qr-order-app.git
+cd restaurant-qr-order-app
 ```
 
 ## Development
