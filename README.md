@@ -1,13 +1,13 @@
 # Restaurant SaaS
 
-QR kod ile müşteri siparişi alma ve mutfak ekranı yönetimi sağlayan SaaS restoran sistemi.
+A SaaS restaurant system that enables QR code-based customer ordering and kitchen screen management.
 
-## Proje Yapısı
+## Project Structure
 
-- `frontend/` — React tabanlı müşteri ve mutfak arayüzü
-- `backend/` — Express + SQLite API servisi
+- `frontend/` — React-based UI for customers and kitchen
+- `backend/` — Express + SQLite API service
 
-## Kurulum
+## Setup
 
 ```bash
 git clone <repo-url>
@@ -15,9 +15,9 @@ cd restaurant-saas
 npm install
 ```
 
-## Geliştirme
+## Development
 
-Her klasör içinde bağımsız olarak geliştirme yapılır:
+Each folder is developed independently:
 
 ```bash
 cd backend
