@@ -10,3 +10,6 @@ build/
 
 # Environment
 .env
+
+/backend/restaurant.db
+/backend/node_modules/
