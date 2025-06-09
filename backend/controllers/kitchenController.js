@@ -4,7 +4,7 @@ export const getOpenOrders = async (req, res) => {
   const { tenant } = req.params;
 
   try {
-    // Dind tenant id
+    // Find tenant id
     const tenantRow = await db('tenants').where('name', tenant).first();
     if (!tenantRow) {
       return res.status(404).json({ error: 'Tenant not found' });
