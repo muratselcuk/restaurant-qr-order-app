@@ -16,7 +16,9 @@ cd restaurant-qr-order-app
 
 ## Database
 ```bash
+cd backend
 npx knex migrate:latest --knexfile knexfile.js
+npx knex seed:run --knexfile knexfile.js
 ```
 
 ## Development
