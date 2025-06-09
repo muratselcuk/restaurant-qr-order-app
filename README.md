@@ -14,6 +14,11 @@ git clone https://github.com/muratselcuk/restaurant-qr-order-app.git
 cd restaurant-qr-order-app
 ```
 
+#Database
+```bash
+npx knex migrate:latest --knexfile knexfile.js
+```
+
 ## Development
 
 Each folder is developed independently:
