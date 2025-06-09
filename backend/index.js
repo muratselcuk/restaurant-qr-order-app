@@ -1,9 +1,12 @@
 import express from 'express';
 import orderRoutes from './routes/order.js';
 import kitchenRoutes from './routes/kitchen.js';
+import dotenv from 'dotenv';
 
+dotenv.config();
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
+const baseUrl = process.env.BASE_URL || 'http://localhost';
 
 app.use(express.json());
 
@@ -19,5 +22,5 @@ app.use('/order', orderRoutes);
 app.use('/kitchen', kitchenRoutes);
 
 app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
+  console.log(`App listening at ${baseUrl}:${port}`);
 });

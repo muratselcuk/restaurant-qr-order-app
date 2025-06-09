@@ -1,6 +1,6 @@
 import db from '../db.js';
 
-export const getPendingOrders = async (req, res) => {
+export const getOpenOrders = async (req, res) => {
   const { tenant } = req.params;
 
   try {
@@ -10,11 +10,11 @@ export const getPendingOrders = async (req, res) => {
       return res.status(404).json({ error: 'Tenant not found' });
     }
 
-    // Pending orders'ı çek
+    // Open orders'ı çek
     const orders = await db('orders')
       .where({
         tenant_id: tenantRow.id,
-        status: 'pending'
+        status: 'open'
       })
       .select('id', 'table_id', 'created_at');
 
@@ -35,8 +35,8 @@ export const getPendingOrders = async (req, res) => {
         return {
           order_id: order.id,
           table_id: order.table_id,
-          table_number: tableRow ? tableRow.table_number : null,
-          status: 'pending',
+          name: tableRow ? tableRow.name : null,
+          status: 'open',
           items,
           created_at: order.created_at
         };

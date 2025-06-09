@@ -16,8 +16,8 @@ exports.seed = async function(knex) {
 
   // Tables
   await knex('tables').insert([
-    { id: 1, tenant_id: 1, table_number: 'Table 1' },
-    { id: 2, tenant_id: 1, table_number: 'Table 2' }
+    { id: 1, tenant_id: 1, name: 'Table 1' },
+    { id: 2, tenant_id: 1, name: 'Table 2' }
   ]);
 
   // Menu_items
