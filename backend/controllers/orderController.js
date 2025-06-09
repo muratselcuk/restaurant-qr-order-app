@@ -24,7 +24,7 @@ export const getOrder = async (req, res) => {
     res.json({
       table: {
         id: table.id,
-        table_number: table.table_number
+        name: table.name
       },
       menu: menuItems
     });
@@ -59,7 +59,7 @@ export const createOrder = async (req, res) => {
     const [orderId] = await db('orders').insert({
       tenant_id: tenantRow.id,
       table_id: table.id,
-      status: 'pending'
+      status: 'open'
     });
 
     const orderItemsData = items.map(item => ({

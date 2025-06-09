@@ -1,4 +1,5 @@
 // Update with your config settings.
+require('dotenv').config();
 
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
@@ -8,7 +9,7 @@ module.exports = {
   development: {
     client: 'sqlite3',
     connection: {
-      filename: './restaurant.db'
+      filename: process.env.SQLITE_PATH || '../data/restaurant.db'
     }
   },
 

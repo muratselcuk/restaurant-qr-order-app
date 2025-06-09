@@ -1,8 +1,8 @@
 import express from 'express';
-import { getPendingOrders } from '../controllers/kitchenController.js';
+import { getOpenOrders } from '../controllers/kitchenController.js';
 
 const router = express.Router();
 
-router.get('/:tenant/orders', getPendingOrders);
+router.get('/:tenant/orders', getOpenOrders);
 
 export default router;

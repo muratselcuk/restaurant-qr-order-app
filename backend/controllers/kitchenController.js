@@ -1,24 +1,24 @@
 import db from '../db.js';
 
-export const getPendingOrders = async (req, res) => {
+export const getOpenOrders = async (req, res) => {
   const { tenant } = req.params;
 
   try {
-    // Tenant id'yi bul
+    // Find tenant id
     const tenantRow = await db('tenants').where('name', tenant).first();
     if (!tenantRow) {
       return res.status(404).json({ error: 'Tenant not found' });
     }
 
-    // Pending orders'ı çek
+   // Fetch open orders
     const orders = await db('orders')
       .where({
         tenant_id: tenantRow.id,
-        status: 'pending'
+        status: 'open'
       })
       .select('id', 'table_id', 'created_at');
 
-    // Her order için order_items + menu_items bilgilerini çekelim
+    // Get order_items + menu_items information
     const ordersWithItems = await Promise.all(
       orders.map(async (order) => {
         const tableRow = await db('tables').where('id', order.table_id).first();
@@ -35,8 +35,8 @@ export const getPendingOrders = async (req, res) => {
         return {
           order_id: order.id,
           table_id: order.table_id,
-          table_number: tableRow ? tableRow.table_number : null,
-          status: 'pending',
+          name: tableRow ? tableRow.name : null,
+          status: 'open',
           items,
           created_at: order.created_at
         };

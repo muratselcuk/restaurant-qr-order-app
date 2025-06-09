@@ -12,7 +12,7 @@ exports.up = function(knex) {
     .createTable('tables', function(table) {
       table.increments('id').primary();
       table.integer('tenant_id').references('id').inTable('tenants');
-      table.string('table_number');
+      table.string('name');
       table.timestamp('created_at').defaultTo(knex.fn.now());
     })
     .createTable('menu_items', function(table) {
