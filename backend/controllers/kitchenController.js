@@ -4,13 +4,13 @@ export const getOpenOrders = async (req, res) => {
   const { tenant } = req.params;
 
   try {
-    // Tenant id'yi bul
+    // Dind tenant id
     const tenantRow = await db('tenants').where('name', tenant).first();
     if (!tenantRow) {
       return res.status(404).json({ error: 'Tenant not found' });
     }
 
-    // Open orders'ı çek
+   // Fetch open orders
     const orders = await db('orders')
       .where({
         tenant_id: tenantRow.id,
@@ -18,7 +18,7 @@ export const getOpenOrders = async (req, res) => {
       })
       .select('id', 'table_id', 'created_at');
 
-    // Her order için order_items + menu_items bilgilerini çekelim
+    // Get order_items + menu_items information
     const ordersWithItems = await Promise.all(
       orders.map(async (order) => {
         const tableRow = await db('tables').where('id', order.table_id).first();

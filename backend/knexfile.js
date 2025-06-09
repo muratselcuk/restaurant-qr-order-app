@@ -9,7 +9,7 @@ module.exports = {
   development: {
     client: 'sqlite3',
     connection: {
-      filename: process.env.SQLITE_PATH 
+      filename: process.env.SQLITE_PATH || '../data/restaurant.db'
     }
   },
 
