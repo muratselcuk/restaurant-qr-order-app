@@ -1,5 +1,6 @@
 import express from 'express';
 import orderRoutes from './routes/order.js';
+import kitchenRoutes from './routes/kitchen.js';
 
 const app = express();
 const port = 3001;
@@ -15,6 +16,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/order', orderRoutes);
+app.use('/kitchen', kitchenRoutes);
 
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
