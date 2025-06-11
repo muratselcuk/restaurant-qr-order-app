@@ -14,3 +14,7 @@ build/
 /data/restaurant.db
 /backend/node_modules/
 *.db
+
+# Frontend
+/frontend/node_modules
+/frontend/dist
