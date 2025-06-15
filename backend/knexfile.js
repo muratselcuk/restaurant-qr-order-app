@@ -1,18 +1,13 @@
-// Update with your config settings.
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 
-/**
- * @type { Object.<string, import("knex").Knex.Config> }
- */
-module.exports = {
-
+const config = {
   development: {
     client: 'sqlite3',
     connection: {
       filename: process.env.SQLITE_PATH || '../data/restaurant.db'
     }
   },
-
   staging: {
     client: 'postgresql',
     connection: {
@@ -28,7 +23,6 @@ module.exports = {
       tableName: 'knex_migrations'
     }
   },
-
   production: {
     client: 'postgresql',
     connection: {
@@ -44,5 +38,6 @@ module.exports = {
       tableName: 'knex_migrations'
     }
   }
-
 };
+
+export default config;
