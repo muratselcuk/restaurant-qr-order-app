@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import orderRoutes from './routes/order.js';
 import kitchenRoutes from './routes/kitchen.js';
+import menuRoutes from './routes/menu.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -20,8 +21,10 @@ app.get('/', (req, res) => {
   });
 });
 
-app.use('/order', orderRoutes);
-app.use('/kitchen', kitchenRoutes);
+
+app.use('/api/menu', menuRoutes);
+app.use('/api/order', orderRoutes);
+app.use('/api/kitchen', kitchenRoutes);
 
 app.listen(port, () => {
   console.log(`App listening at ${baseUrl}:${port}`);
