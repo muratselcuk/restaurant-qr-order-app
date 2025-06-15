@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import orderRoutes from './routes/order.js';
 import kitchenRoutes from './routes/kitchen.js';
 import dotenv from 'dotenv';
@@ -8,6 +9,7 @@ const app = express();
 const port = process.env.PORT || 3001;
 const baseUrl = process.env.BASE_URL || 'http://localhost';
 
+app.use(cors()); // Tüm kaynaklara izin verir
 app.use(express.json());
 
 app.get('/', (req, res) => {
