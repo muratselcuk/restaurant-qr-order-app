@@ -4,6 +4,7 @@ import { getMenuItems } from '../controllers/menuController.js';
 
 const router = express.Router();
 
-router.get('/', getMenuItems);
+// DOĞRU: /api/menu/:tenant
+router.get('/:tenant', getMenuItems);
 
 export default router;
