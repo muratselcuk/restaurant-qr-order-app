@@ -3,26 +3,6 @@ import CategoryList from '../components/CategoryList';
 import { useEffect, useState } from 'react';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-const menuData = [
-  {
-    id: 1,
-    name: 'Starters',
-    items: [
-      { id: 1, name: 'Bruschetta', price: 6.5 },
-      { id: 2, name: 'Garlic Bread', price: 5.0 }
-    ]
-  },
-  {
-    id: 2,
-    name: 'Main Courses',
-    items: [
-      { id: 3, name: 'Margherita Pizza', price: 10.0 },
-      { id: 4, name: 'Spaghetti Carbonara', price: 12.5 }
-    ]
-  }
-];
-
-
 
 function OrderPage() {
   const { tenantCode, tableId } = useParams();
@@ -33,10 +13,10 @@ function OrderPage() {
     useEffect(() => {
     const fetchMenu = async () => {
         try {
-        //const response = await fetch(`${apiBaseUrl}/${tenantCode}/menu`);
-        //const data = await response.json();
-        //setMenu(data);
-        setMenu(menuData); // hardcoded dummy data
+        const response = await fetch(`${apiBaseUrl}/api/menu/${tenantCode}`);
+        const data = await response.json();
+        setMenu(data);
+        //setMenu(menuData); // hardcoded dummy data
         } catch (error) {
         console.error('Menü çekilirken hata oluştu:', error);
         } finally {
@@ -79,7 +59,7 @@ const handleSubmitOrder = async () => {
   };
 
   try {
-    const response = await fetch(`${apiBaseUrl}/order/${tenantCode}/${tableId}`, {
+    const response = await fetch(`${apiBaseUrl}/api/order/${tenantCode}/${tableId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

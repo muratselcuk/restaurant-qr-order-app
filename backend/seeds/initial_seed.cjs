@@ -22,12 +22,13 @@ await knex('tables').insert([
 
 // Menu Items
 await knex('menu_items').insert([
-  { id: 1, tenant_id: 1, name: 'Pizza', price: 12.5, created_at: knex.fn.now() },
-  { id: 2, tenant_id: 1, name: 'Salad', price: 7.0, created_at: knex.fn.now() },
-  { id: 3, tenant_id: 1, name: 'Drink', price: 3.0, created_at: knex.fn.now() },
-  { id: 4, tenant_id: 1, name: 'Burger', price: 10.0, created_at: knex.fn.now() },
-  { id: 5, tenant_id: 1, name: 'Pasta', price: 11.0, created_at: knex.fn.now() }
+  { id: 1, tenant_id: 1, name: 'Bruschetta', price: 6.5, created_at: knex.fn.now(), category: 'Starters' },
+  { id: 2, tenant_id: 1, name: 'Garlic Bread', price: 5.0, created_at: knex.fn.now(), category: 'Starters' },
+  { id: 3, tenant_id: 1, name: 'Pizza', price: 12.5, created_at: knex.fn.now(), category: 'Main Courses' },
+  { id: 4, tenant_id: 1, name: 'Pasta', price: 11.0, created_at: knex.fn.now(), category: 'Main Courses' },
+  { id: 5, tenant_id: 1, name: 'Limonata', price: 4.5, created_at: knex.fn.now(), category: 'Drinks' }
 ]);
+
 
 // Orders
 await knex('orders').insert([
