@@ -1,6 +1,9 @@
 import { useParams } from 'react-router-dom';
-import CategoryList from '../components/CategoryList';
 import { useEffect, useState } from 'react';
+
+import CategoryList from '../components/CategoryList';
+import Cart from '../components/Cart';
+
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -58,6 +61,8 @@ const handleSubmitOrder = async () => {
     }))
   };
 
+
+
   try {
     const response = await fetch(`${apiBaseUrl}/api/order/${tenantCode}/${tableId}`, {
       method: 'POST',
@@ -78,6 +83,10 @@ const handleSubmitOrder = async () => {
     alert('Sipariş gönderilirken bir hata oluştu.');
   }
 };
+
+const handleRemoveFromCart = (itemId) => {
+  setCart(prevCart => prevCart.filter(item => item.id !== itemId));
+};
       if (loading) return <p>Menü yükleniyor...</p>; // Menü yüklendiyse geri kalan ekran döndürülür
 
   return (
@@ -95,17 +104,12 @@ const handleSubmitOrder = async () => {
         />
       ))}
 
-        <h2>Cart</h2>
-        <ul>
-        {cart.map((item, index) => (
-            <li key={index}>
-            {item.name} - ${item.price.toFixed(2)} x {item.quantity}
-            </li>
-        ))}
-        </ul>
-        <button onClick={() => setCart([])}>Sepeti Temizle</button>
-        <button onClick={handleSubmitOrder}>Siparişi Gönder</button>
+      <Cart cartItems={cart} onRemove={handleRemoveFromCart} />
 
+      {cart.length > 0 && (
+        <button onClick={handleSubmitOrder}>Siparişi Gönder</button>
+      )}
+      <button onClick={() => setCart([])}>Sepeti Temizle</button>
 
     </div>
   );
