@@ -1,39 +1,67 @@
-# QR Order Backend API
+# 🛠️ Backend - Restaurant QR Order App
 
-## Test Data (Seed Data)
+Node.js, Express ve Knex ile geliştirilen backend uygulamasıdır. Menü, sipariş ve mutfak işlemlerini REST API üzerinden sunar.
 
-- Tenant name: **Restaurant A**
-- Tables:
-  - Table 1 (ID: 1)
-  - Table 2 (ID: 2)
-- Menu Items:
-  - Pizza (ID: 1)
-  - Salad (ID: 2)
-  - Drink (ID: 3)
+---
 
-## Endpoints
+## 🚀 Kurulum
 
-### GET /
+```bash
+cd backend
+npm install
+npx knex migrate:latest
+npx knex seed:run
+npm run dev
+```
 
-Returns basic API status:
+---
 
-```json
-{
-  "message": "Backend is running.",
-  "version": "1.0.0",
-  "timestamp": "..."
-}
+## 🔐 .env Dosyası
 
-### GET /order/:tenant/:table_id
-- Returns table info and menu.
+```env
+PORT=3001
+DATABASE_URL=sqlite3://./dev.sqlite3
+```
 
-### POST /order/:tenant/:table_id
-- Creates new order for given tenant and table_id.
+> `DATABASE_URL` SQLite, PostgreSQL veya başka bir veritabanına göre değiştirilebilir.
 
-```json
-{
-  "items": [
-    { "menu_item_id": 1, "quantity": 2 },
-    { "menu_item_id": 3, "quantity": 1 }
-  ]
-}
+---
+
+## 📁 Önemli Dosyalar
+
+- `routes/` → Menü, sipariş, mutfak için API uçları
+- `controllers/` → İş mantığı: orderController.js, menuController.js, kitchenController.js
+- `db.js` → Knex veritabanı bağlantısı
+- `knexfile.js` → Knex yapılandırması
+
+---
+
+## 🧪 Test
+
+Postman veya tarayıcıdan manuel test edilebilir:
+
+- `GET /api/menu/:tenant`
+- `POST /api/order/:tenant/:table_id`
+- `GET /api/kitchen/orders/:tenant`
+
+---
+
+## 🗃️ Veritabanı
+
+### Tablolar
+
+- `tenants` → Çok kiracılı yapı için restoran tanımı
+- `tables` → Masa bilgileri
+- `menu_items` → Menüdeki ürünler
+- `orders` → Sipariş kayıtları
+- `order_items` → Siparişteki ürün detayları
+
+> Tablolar Knex migration ile oluşturulmuştur.
+
+---
+
+## 📌 Katkı
+
+- Kod katkısı için PR açılmadan önce `main` branch güncellenmelidir
+- API davranışı değiştiriliyorsa ilgili controller test edilmelidir
+

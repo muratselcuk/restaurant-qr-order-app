@@ -1,12 +1,48 @@
-# React + Vite
+# 🧩 Frontend - Restaurant QR Order App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + Vite tabanlı frontend uygulamasıdır. Kullanıcıların menüleri görüntülemesi, ürünleri sepete eklemesi ve sipariş vermesi sağlanır.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Kurulum
 
-## Expanding the ESLint configuration
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 📁 Önemli Dosyalar
+
+- `src/pages/OrderPage.jsx` → Menü ve sipariş ekranı
+- `src/pages/TableInputPage.jsx` → Masa numarası giriş ekranı
+- `src/pages/KitchenPage.jsx` → Mutfak sipariş ekranı
+- `src/components/Cart.jsx` → Sepet bileşeni
+- `src/components/CategoryList.jsx` → Menü kategorileri
+
+---
+
+## 🧪 Test
+
+Manuel olarak test edilir:
+
+- `http://localhost:3000/start/RestaurantA` → müşteri girişi
+- `http://localhost:3000/kitchen/RestaurantA` → mutfak ekranı
+
+---
+
+## 🔧 Notlar
+
+- Vite kullanıldığından `import.meta.env` ile ortam değişkenleri okunur.
+- Her sayfa `react-router-dom` ile yönlendirilmiştir.
+- Tailwind veya özel CSS henüz eklenmemiştir (isteğe bağlıdır).
+
+---
+
+## 📌 Katkı
+
+- Geliştirme branch: `feature/{issueId}-{özellik}`
+- Kod değişiklikleri PR ile ana dala (main) merge edilir
+

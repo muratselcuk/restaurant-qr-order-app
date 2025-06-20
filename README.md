@@ -1,11 +1,15 @@
-# Restaurant SaaS
+# 🍽️ Restaurant QR Order App (MVP)
 
-A SaaS restaurant system that enables QR code-based customer ordering and kitchen screen management.
+Bu proje, restoran müşterilerinin QR kod okuyarak kendi telefonları üzerinden sipariş vermelerini sağlar. Aynı zamanda mutfak çalışanları için siparişleri görüntüleyebilecekleri bir panel içerir.
 
-## Project Structure
+## 📂 Klasör Yapısı
 
-- `frontend/` — React-based UI for customers and kitchen
-- `backend/` — Express + SQLite API service
+```
+restaurant-qr-order-app/
+├── backend/       → Node.js + Express + Knex
+├── frontend/      → React + Vite
+└── README.md      → Genel proje açıklaması
+```
 
 ## Setup
 
@@ -34,3 +38,54 @@ cd ../frontend
 npm install
 npm run dev
 ```
+
+## 🧪 Kullanım
+
+### Müşteri Ekranı
+
+QR kod simülasyonu için aşağıdaki URL’yi tarayıcıda aç:
+
+``` http://localhost:3001/start/RestaurantA ```
+
+- Masa numarası input ile girilir
+- Sipariş ekranına yönlendirilir
+
+### Mutfak Ekranı
+
+Açık siparişleri görüntülemek için:
+```
+http://localhost:3001/kitchen/RestaurantA
+```
+
+## 📱 API Uçları
+
+### Menü
+
+```
+GET /api/menu/:tenant
+```
+
+### Sipariş
+
+```
+POST /api/order/:tenant/:table_id
+```
+
+### Mutfak
+
+```
+GET /api/kitchen/orders/:tenant
+```
+
+
+## 👥 Katkı Süreci
+
+- Issue’lar üzerinden görev takibi yapılır
+- Geliştirme branch’leri: feature/{issueId}-{ozellik}
+- PR mesajlarına: Closes #{issueNumber} eklenir
+
+## 📌 Notlar
+
+- Proje MVP aşamasındadır
+- Ek özellikler (QR tarayıcı, durum güncellemeleri, CI/CD) ileriki milestone’larda ele alınacaktır
+
