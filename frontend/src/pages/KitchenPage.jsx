@@ -8,7 +8,7 @@ function KitchenPage() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/kitchen/${tenantCode}/orders`);
+        const res = await fetch(`/api/kitchen/${tenantCode}/orders`);
         const data = await res.json();
         setOrders(data);
       } catch (err) {

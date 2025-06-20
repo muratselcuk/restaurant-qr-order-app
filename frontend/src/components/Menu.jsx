@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 // frontend/src/components/Menu.jsx
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 function Menu() {
   const [items, setItems] = useState([]);
 
 
 useEffect(() => {
-  fetch(`${API_BASE}/api/menu`)
+  fetch(`/api/menu`)
     .then((res) => res.json())
     .then((data) => setItems(data))
     .catch((err) => console.error('Menü alınamadı:', err));
