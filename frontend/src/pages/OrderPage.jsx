@@ -4,9 +4,6 @@ import { useEffect, useState } from 'react';
 import CategoryList from '../components/CategoryList';
 import Cart from '../components/Cart';
 
-
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-
 function OrderPage() {
   const { tenantCode, tableId } = useParams();
   const [cart, setCart] = useState([]);
@@ -16,7 +13,7 @@ function OrderPage() {
     useEffect(() => {
     const fetchMenu = async () => {
         try {
-        const response = await fetch(`${apiBaseUrl}/api/menu/${tenantCode}`);
+        const response = await fetch(`/api/menu/${tenantCode}`);
         const data = await response.json();
         setMenu(data);
         //setMenu(menuData); // hardcoded dummy data
@@ -28,7 +25,7 @@ function OrderPage() {
     };
 
     fetchMenu();
-    }, [apiBaseUrl, tenantCode]);
+    }, [tenantCode]);
 
 const handleAddToCart = (item) => {
   setCart(prevCart => {
@@ -64,7 +61,7 @@ const handleSubmitOrder = async () => {
 
 
   try {
-    const response = await fetch(`${apiBaseUrl}/api/order/${tenantCode}/${tableId}`, {
+    const response = await fetch(`/api/order/${tenantCode}/${tableId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
