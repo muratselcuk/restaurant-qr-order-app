@@ -100,3 +100,37 @@ export const getOrderDetails = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+export const updateOrderStatus = async (req, res) => {
+  const { tenant, order_id } = req.params;
+  const { status } = req.body;
+
+  if (!["preparing", "done"].includes(status)) {
+    return res.status(400).json({ error: "Invalid status value" });
+  }
+
+  try {
+    const tenantRow = await db('tenants').where('name', tenant).first();
+    if (!tenantRow) {
+      return res.status(404).json({ error: 'Tenant not found' });
+    }
+
+    const order = await db('orders')
+      .where({ id: order_id, tenant_id: tenantRow.id })
+      .first();
+
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    await db('orders')
+      .where({ id: order.id })
+      .update({ status });
+
+    res.status(200).json({ message: 'Order status updated', status });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
