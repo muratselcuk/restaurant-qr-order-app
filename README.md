@@ -89,3 +89,17 @@ GET /api/kitchen/orders/:tenant
 - Proje MVP aşamasındadır
 - Ek özellikler (QR tarayıcı, durum güncellemeleri, CI/CD) ileriki milestone’larda ele alınacaktır
 
+## 🧪 Testler
+
+### Backend
+```bash
+cd backend
+npm test
+```
+
+### Frontend
+```bash
+cd frontend
+npm test
+```
+

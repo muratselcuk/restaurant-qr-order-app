@@ -65,3 +65,10 @@ Postman veya tarayıcıdan manuel test edilebilir:
 - Kod katkısı için PR açılmadan önce `main` branch güncellenmelidir
 - API davranışı değiştiriliyorsa ilgili controller test edilmelidir
 
+## 🧪 Testler
+
+### Backend
+```bash
+cd backend
+npm test
+```
