@@ -26,6 +26,12 @@ app.use('/api/menu', menuRoutes);
 app.use('/api/order', orderRoutes);
 app.use('/api/kitchen', kitchenRoutes);
 
-app.listen(port, () => {
-  console.log(`App listening at ${baseUrl}:${port}`);
-});
+
+// SADECE test ortamı dışında dinle!
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(port, () => {
+    console.log(`App listening at ${baseUrl}:${port}`);
+  });
+}
+
+export default app;

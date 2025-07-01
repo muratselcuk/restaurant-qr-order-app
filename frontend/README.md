@@ -46,3 +46,8 @@ Manuel olarak test edilir:
 - Geliştirme branch: `feature/{issueId}-{özellik}`
 - Kod değişiklikleri PR ile ana dala (main) merge edilir
 
+### Frontend
+```bash
+cd frontend
+npm test
+```

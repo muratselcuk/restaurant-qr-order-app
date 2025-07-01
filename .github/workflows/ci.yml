@@ -1,0 +1,24 @@
+jobs:
+  frontend-lint-build-test:
+    # …
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with: { node-version: '16' }
+      - run: npm install
+      - run: npm run lint
+      - run: npm run build
+      - run: npm test         # ← frontend test
+
+  backend-lint-migrate-test:
+    # …
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with: { node-version: '16' }
+      - run: npm install
+      - run: npm run lint
+      - run: npx knex migrate:latest --knexfile knexfile.js
+      - run: npm test         # ← backend test
