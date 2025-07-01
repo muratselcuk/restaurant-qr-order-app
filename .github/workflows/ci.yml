@@ -1,24 +1,44 @@
-jobs:
-  frontend-lint-build-test:
-    # …
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with: { node-version: '16' }
-      - run: npm install
-      - run: npm run lint
-      - run: npm run build
-      - run: npm test         # ← frontend test
+name: CI
 
-  backend-lint-migrate-test:
-    # …
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
     steps:
       - uses: actions/checkout@v3
       - name: Setup Node.js
         uses: actions/setup-node@v3
-        with: { node-version: '16' }
-      - run: npm install
-      - run: npm run lint
-      - run: npx knex migrate:latest --knexfile knexfile.js
-      - run: npm test         # ← backend test
+        with:
+          node-version: '22.x'
+      - name: Install dependencies
+        run: npm install
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        run: npm run build
+
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.x'
+      - name: Install dependencies
+        run: npm install
+      - name: Lint
+        run: npm run lint
+      - name: Migrate
+        run: npx knex migrate:latest --knexfile knexfile.js
