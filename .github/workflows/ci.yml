@@ -25,20 +25,34 @@ jobs:
       - name: Build
         run: npm run build
 
-  backend:
+  test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
+    services:
+      postgres:
+        image: postgres:15
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: devuser
+          POSTGRES_PASSWORD: devpass
+          POSTGRES_DB: qrdb
+        options: >-
+          --health-cmd="pg_isready -U devuser"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DATABASE_URL: postgresql://devuser:devpass@localhost:5432/qrdb
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22.x'
+      - uses: actions/checkout@v4
       - name: Install dependencies
         run: npm install
-      - name: Lint
-        run: npm run lint
-      - name: Migrate
+        working-directory: ./backend
+      - name: Run migrations
         run: npx knex migrate:latest --knexfile knexfile.js
+        working-directory: ./backend
+      - name: Run tests
+        run: npm test
+        working-directory: ./backend

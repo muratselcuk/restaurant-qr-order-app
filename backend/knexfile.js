@@ -1,42 +1,21 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+const { NODE_ENV = 'development' } = process.env;
+
+// Sadece PostgreSQL yapılandırması
 const config = {
-  development: {
-    client: 'sqlite3',
-    connection: {
-      filename: process.env.SQLITE_PATH || '../data/restaurant.db'
-    }
+  client: 'pg',
+  connection: process.env.DATABASE_URL,
+  pool: {
+    min: 2,
+    max: 10
   },
-  staging: {
-    client: 'postgresql',
-    connection: {
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
-    },
-    pool: {
-      min: 2,
-      max: 10
-    },
-    migrations: {
-      tableName: 'knex_migrations'
-    }
+  migrations: {
+    tableName: 'knex_migrations'
   },
-  production: {
-    client: 'postgresql',
-    connection: {
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
-    },
-    pool: {
-      min: 2,
-      max: 10
-    },
-    migrations: {
-      tableName: 'knex_migrations'
-    }
+  seeds: {
+    directory: './seeds'
   }
 };
 
