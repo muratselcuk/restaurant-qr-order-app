@@ -11,7 +11,7 @@ build/
 # Environment
 .env
 
-/data/restaurant.db
+/data/
 /backend/node_modules/
 *.db
 
