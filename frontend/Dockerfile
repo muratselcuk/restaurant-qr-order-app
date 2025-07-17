@@ -1,15 +1,9 @@
-# build aşaması
-FROM node:22-slim AS build
+FROM node:22-bullseye
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY package.json ./
+# Eğer package-lock.json varsa, onu da ekle:
+COPY package-lock.json ./
+RUN npm install
 COPY . .
-RUN npm run build
-
-# serve aşaması
-FROM node:22-slim
-WORKDIR /app
-COPY --from=build /app/dist ./dist
-RUN npm install -g serve
 EXPOSE 3000
-CMD ["serve", "-s", "dist", "-l", "3000"]
+CMD ["npm", "run", "dev"]

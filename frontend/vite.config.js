@@ -8,7 +8,7 @@ export default defineConfig({
     port: 3000, // Frontend server port
     proxy: {
       '/api': {
-        target: 'http://localhost:3001', // Backend server URL
+        target: 'http://backend:3001', // Backend server URL
         changeOrigin: true,
         secure: false,
       },

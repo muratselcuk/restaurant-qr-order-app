@@ -56,11 +56,13 @@ export const createOrder = async (req, res) => {
       return res.status(404).json({ error: 'Table not found' });
     }
 
-    const [orderId] = await db('orders').insert({
+    // DÜZELTME: .returning('id') ekle
+    const [orderIdObj] = await db('orders').insert({
       tenant_id: tenantRow.id,
       table_id: table.id,
       status: 'open'
-    });
+    }).returning('id');
+    const orderId = orderIdObj.id;
 
     const orderItemsData = items.map(item => ({
       order_id: orderId,

@@ -1,7 +1,7 @@
 function MenuItemCard({ item, onAddToCart }) {
   return (
     <li>
-      {item.name} - ${item.price.toFixed(2)}
+      {item.name} - {Number(item.price).toFixed(2)} TL
       <button
         style={{ marginLeft: '10px' }}
         onClick={() => onAddToCart(item)}
