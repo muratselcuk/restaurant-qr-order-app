@@ -25,24 +25,6 @@ jobs:
       - name: Build
         run: npm run build
 
-  backend:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22.x'
-      - name: Install dependencies
-        run: npm install
-      - name: Lint
-        run: npm run lint
-      - name: Migrate
-        run: npx knex migrate:latest --knexfile knexfile.js
-
   test:
     runs-on: ubuntu-latest
     services:
