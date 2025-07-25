@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:15
+        image: postgres:15-alpine
         ports:
           - 5432:5432
         env:
@@ -45,14 +45,33 @@ jobs:
     env:
       DATABASE_URL: postgresql://devuser:devpass@localhost:5432/qrdb
 
+    defaults:
+      run:
+        working-directory: ./backend
+
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.x'
+
       - name: Install dependencies
         run: npm install
-        working-directory: ./backend
+
+      - name: Wait for Postgres to be ready
+        run: |
+          echo "Waiting for Postgres..."
+          until pg_isready -h localhost -p 5432 -U devuser; do
+            sleep 1
+          done
+
       - name: Run migrations
         run: npx knex migrate:latest --knexfile knexfile.js
-        working-directory: ./backend
+
+      - name: Run seeds
+        run: npx knex seed:run --knexfile knexfile.js
+
       - name: Run tests
         run: npm test
-        working-directory: ./backend
