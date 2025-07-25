@@ -14,8 +14,8 @@ await knex('tenants').insert([{ id: 1, name: 'Restaurant A' }]);
 
 // Tables (id'leri al)
 const tableRows = await knex('tables').insert([
-  { tenant_id: 1, name: 'Table 1', created_at: knex.fn.now() },
-  { tenant_id: 1, name: 'Table 2', created_at: knex.fn.now() }
+  { id: 1, tenant_id: 1, name: 'Table 1', created_at: knex.fn.now() },
+  { id: 2, tenant_id: 1, name: 'Table 2', created_at: knex.fn.now() }
 ]).returning(['id', 'name']);
 
 // Menu Items
