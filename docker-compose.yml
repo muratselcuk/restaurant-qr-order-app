@@ -12,11 +12,17 @@ services:
       - ./data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U devuser -d qrdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build: ./backend
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
       DATABASE_URL: postgresql://devuser:devpass@postgres:5432/qrdb
     ports:
@@ -24,6 +30,12 @@ services:
     volumes:
       - ./data:/data      # SQLite data gerekmez, ancak ortak volume örneği
       - ./backend:/app         # KODLARI MOUNT ET
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
 
   frontend:
@@ -32,7 +44,8 @@ services:
       - ./frontend:/app
       - /app/node_modules
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     ports:
       - "3000:3000"
     environment:
