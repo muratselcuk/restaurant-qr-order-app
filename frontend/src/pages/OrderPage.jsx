@@ -9,16 +9,23 @@ function OrderPage() {
   const [cart, setCart] = useState([]);
   const [menu, setMenu] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
     useEffect(() => {
     const fetchMenu = async () => {
         try {
         const response = await fetch(`/api/menu/${tenantCode}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
         setMenu(data);
-        //setMenu(menuData); // hardcoded dummy data
+        setError(null);
         } catch (error) {
-        console.error('Menü çekilirken hata oluştu:', error);
+        setError(error.message);
+        setMenu([]); // Hata durumunda boş array set et
         } finally {
         setLoading(false);
         }
@@ -84,7 +91,8 @@ const handleSubmitOrder = async () => {
 const handleRemoveFromCart = (itemId) => {
   setCart(prevCart => prevCart.filter(item => item.id !== itemId));
 };
-      if (loading) return <p>Menü yükleniyor...</p>; // Menü yüklendiyse geri kalan ekran döndürülür
+      if (loading) return <p>Menü yükleniyor...</p>;
+      if (error) return <p>Hata: {error}</p>;
 
   return (
     <div>
