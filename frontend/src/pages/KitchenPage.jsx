@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 function KitchenPage() {
   const { tenantCode } = useParams();
@@ -8,7 +8,7 @@ function KitchenPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch(`/api/kitchen/${tenantCode}/orders`);
@@ -22,14 +22,14 @@ function KitchenPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [tenantCode]);
 
   useEffect(() => {
     fetchOrders();
     // Her 30 saniyede bir siparişleri güncelle
     const interval = setInterval(fetchOrders, 30000);
     return () => clearInterval(interval);
-  }, [tenantCode]);
+  }, [tenantCode, fetchOrders]);
 
   const markAsReady = async (orderId) => {
     try {
