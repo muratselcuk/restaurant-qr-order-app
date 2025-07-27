@@ -91,31 +91,80 @@ const handleSubmitOrder = async () => {
 const handleRemoveFromCart = (itemId) => {
   setCart(prevCart => prevCart.filter(item => item.id !== itemId));
 };
-      if (loading) return <p>Menü yükleniyor...</p>;
-      if (error) return <p>Hata: {error}</p>;
+      if (loading) return (
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
+            <p className="text-lg text-gray-600">Menü yükleniyor...</p>
+          </div>
+        </div>
+      );
+      
+      if (error) return (
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="text-red-500 text-6xl mb-4">⚠️</div>
+            <p className="text-lg text-red-600 mb-2">Hata oluştu</p>
+            <p className="text-gray-600">{error}</p>
+          </div>
+        </div>
+      );
 
   return (
-    <div>
-      <h1>Order Page</h1>
-      <p>Tenant: {tenantCode}</p>
-      <p>Table: {tableId}</p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Sipariş Sayfası</h1>
+          <div className="mt-2 text-sm text-gray-600">
+            <span className="font-medium">Restoran:</span> {tenantCode} | 
+            <span className="font-medium ml-2">Masa:</span> {tableId}
+          </div>
+        </div>
+      </div>
 
-      <h2>Menu</h2>
-      {menu.map(category => (
-        <CategoryList
-          key={category.id}
-          category={category}
-          onAddToCart={handleAddToCart}
-        />
-      ))}
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Menu Section */}
+          <div className="lg:col-span-2">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">Menü</h2>
+            <div className="space-y-6">
+              {menu.map(category => (
+                <CategoryList
+                  key={category.id}
+                  category={category}
+                  onAddToCart={handleAddToCart}
+                />
+              ))}
+            </div>
+          </div>
 
-      <Cart cartItems={cart} onRemove={handleRemoveFromCart} />
-
-      {cart.length > 0 && (
-        <button onClick={handleSubmitOrder}>Siparişi Gönder</button>
-      )}
-      <button onClick={() => setCart([])}>Sepeti Temizle</button>
-
+          {/* Cart Section */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-6">
+              <Cart cartItems={cart} onRemove={handleRemoveFromCart} />
+              
+              <div className="mt-4 space-y-3">
+                {cart.length > 0 && (
+                  <button 
+                    onClick={handleSubmitOrder}
+                    className="w-full btn-primary text-lg py-3"
+                  >
+                    Siparişi Gönder
+                  </button>
+                )}
+                <button 
+                  onClick={() => setCart([])}
+                  className="w-full btn-secondary"
+                >
+                  Sepeti Temizle
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
