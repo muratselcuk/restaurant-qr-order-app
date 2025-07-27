@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion'; // eslint-disable-line no-unused-vars
 
 import CategoryList from '../components/CategoryList';
 import Cart from '../components/Cart';
@@ -92,36 +93,76 @@ const handleRemoveFromCart = (itemId) => {
   setCart(prevCart => prevCart.filter(item => item.id !== itemId));
 };
       if (loading) return (
-        <div className="flex items-center justify-center min-h-screen">
+        <motion.div 
+          className="flex items-center justify-center min-h-screen"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
+            <motion.div 
+              className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            ></motion.div>
             <p className="text-lg text-gray-600">Menü yükleniyor...</p>
           </div>
-        </div>
+        </motion.div>
       );
       
       if (error) return (
-        <div className="flex items-center justify-center min-h-screen">
+        <motion.div 
+          className="flex items-center justify-center min-h-screen"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="text-center">
-            <div className="text-red-500 text-6xl mb-4">⚠️</div>
+            <motion.div 
+              className="text-red-500 text-6xl mb-4"
+              animate={{ rotate: [0, -10, 10, 0] }}
+              transition={{ duration: 0.5, repeat: 2 }}
+            >⚠️</motion.div>
             <p className="text-lg text-red-600 mb-2">Hata oluştu</p>
             <p className="text-gray-600">{error}</p>
           </div>
-        </div>
+        </motion.div>
       );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <motion.div 
+      className="min-h-screen bg-gray-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <motion.div 
+        className="bg-white shadow-sm border-b"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Sipariş Sayfası</h1>
-          <div className="mt-2 text-sm text-gray-600">
+          <motion.h1 
+            className="text-2xl md:text-3xl font-bold text-gray-900"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+          >
+            Sipariş Sayfası
+          </motion.h1>
+          <motion.div 
+            className="mt-2 text-sm text-gray-600"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+          >
             <span className="font-medium">Restoran:</span> {tenantCode} | 
             <span className="font-medium ml-2">Masa:</span> {tableId}
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -147,25 +188,51 @@ const handleRemoveFromCart = (itemId) => {
               
               <div className="mt-4 space-y-3">
                 {cart.length > 0 && (
-                  <button 
+                  <motion.button 
                     onClick={handleSubmitOrder}
                     className="w-full btn-primary text-lg py-3"
+                    whileHover={{ 
+                      scale: 1.02,
+                      boxShadow: "0 10px 25px rgba(0,0,0,0.1)"
+                    }}
+                    whileTap={{ 
+                      scale: 0.98,
+                      boxShadow: "0 5px 15px rgba(0,0,0,0.1)"
+                    }}
+                    transition={{ 
+                      type: "spring", 
+                      stiffness: 400, 
+                      damping: 17 
+                    }}
                   >
                     Siparişi Gönder
-                  </button>
+                  </motion.button>
                 )}
-                <button 
+                <motion.button 
                   onClick={() => setCart([])}
                   className="w-full btn-secondary"
+                  whileHover={{ 
+                    scale: 1.02,
+                    boxShadow: "0 10px 25px rgba(0,0,0,0.1)"
+                  }}
+                  whileTap={{ 
+                    scale: 0.98,
+                    boxShadow: "0 5px 15px rgba(0,0,0,0.1)"
+                  }}
+                  transition={{ 
+                    type: "spring", 
+                    stiffness: 400, 
+                    damping: 17 
+                  }}
                 >
                   Sepeti Temizle
-                </button>
+                </motion.button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
