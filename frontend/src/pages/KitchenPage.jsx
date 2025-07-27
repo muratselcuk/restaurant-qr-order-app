@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function KitchenPage() {
   const { tenantCode } = useParams();
@@ -88,13 +89,22 @@ function KitchenPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <motion.div 
+        className="bg-white shadow-sm border-b"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+            >
               <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Mutfak Ekranı</h1>
               <p className="text-gray-600 mt-1">{tenantCode}</p>
-            </div>
+            </motion.div>
             <div className="flex items-center space-x-4">
               <button 
                 onClick={fetchOrders}
@@ -112,7 +122,7 @@ function KitchenPage() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -130,8 +140,18 @@ function KitchenPage() {
                   <p className="text-gray-500">Bekleyen sipariş yok</p>
                 </div>
               ) : (
-                pendingOrders.map(order => (
-                  <div key={order.order_id} className="card border-l-4 border-l-yellow-500">
+                pendingOrders.map((order, index) => (
+                  <motion.div 
+                    key={order.order_id} 
+                    className="card border-l-4 border-l-yellow-500"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ 
+                      duration: 0.5, 
+                      delay: index * 0.1,
+                      ease: "easeOut"
+                    }}
+                  >
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
@@ -163,13 +183,26 @@ function KitchenPage() {
                       </div>
                     </div>
                     
-                    <button 
+                    <motion.button 
                       onClick={() => markAsReady(order.order_id)}
                       className="w-full btn-primary"
+                      whileHover={{ 
+                        scale: 1.02,
+                        boxShadow: "0 10px 25px rgba(0,0,0,0.1)"
+                      }}
+                      whileTap={{ 
+                        scale: 0.98,
+                        boxShadow: "0 5px 15px rgba(0,0,0,0.1)"
+                      }}
+                      transition={{ 
+                        type: "spring", 
+                        stiffness: 400, 
+                        damping: 17 
+                      }}
                     >
                       Hazırlandı Olarak İşaretle
-                    </button>
-                  </div>
+                    </motion.button>
+                  </motion.div>
                 ))
               )}
             </div>
@@ -188,8 +221,18 @@ function KitchenPage() {
                   <p className="text-gray-500">Tamamlanan sipariş yok</p>
                 </div>
               ) : (
-                completedOrders.slice(-5).map(order => (
-                  <div key={order.order_id} className="card border-l-4 border-l-green-500 opacity-75">
+                completedOrders.slice(-5).map((order, index) => (
+                  <motion.div 
+                    key={order.order_id} 
+                    className="card border-l-4 border-l-green-500 opacity-75"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 0.75, x: 0 }}
+                    transition={{ 
+                      duration: 0.5, 
+                      delay: index * 0.1,
+                      ease: "easeOut"
+                    }}
+                  >
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
@@ -217,7 +260,7 @@ function KitchenPage() {
                         </div>
                       ))}
                     </div>
-                  </div>
+                  </motion.div>
                 ))
               )}
             </div>

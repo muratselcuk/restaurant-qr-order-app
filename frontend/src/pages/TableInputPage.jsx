@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 function TableInputPage() {
   const { tenantCode } = useParams();
@@ -31,19 +32,53 @@ function TableInputPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
-        <div className="card text-center">
+    <motion.div 
+      className="min-h-screen bg-gray-50 flex items-center justify-center p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
+      <motion.div 
+        className="max-w-md w-full"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
+        <motion.div 
+          className="card text-center"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+        >
           {/* Header */}
-          <div className="mb-8">
-            <div className="text-6xl mb-4">🍽️</div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+          <motion.div 
+            className="mb-8"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+          >
+            <motion.div 
+              className="text-6xl mb-4"
+              animate={{ rotate: [0, -5, 5, 0] }}
+              transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+            >🍽️</motion.div>
+            <motion.h1 
+              className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+            >
               Hoş Geldiniz!
-            </h1>
-            <p className="text-gray-600">
+            </motion.h1>
+            <motion.p 
+              className="text-gray-600"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
+            >
               <span className="font-medium">{tenantCode}</span> restoranına hoş geldiniz
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -67,39 +102,71 @@ function TableInputPage() {
               )}
             </div>
 
-            <button 
+            <motion.button 
               type="submit"
               className="w-full btn-primary text-lg py-3"
+              whileHover={{ 
+                scale: 1.02,
+                boxShadow: "0 10px 25px rgba(0,0,0,0.1)"
+              }}
+              whileTap={{ 
+                scale: 0.98,
+                boxShadow: "0 5px 15px rgba(0,0,0,0.1)"
+              }}
+              transition={{ 
+                type: "spring", 
+                stiffness: 400, 
+                damping: 17 
+              }}
             >
               Siparişe Başla
-            </button>
+            </motion.button>
           </form>
 
           {/* Quick Table Selection */}
           <div className="mt-8">
             <p className="text-sm text-gray-500 mb-3">Hızlı Seçim:</p>
             <div className="grid grid-cols-3 gap-2">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
-                <button
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num, index) => (
+                <motion.button
                   key={num}
                   onClick={() => setTableId(num.toString())}
                   className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-primary-500 transition-colors duration-200 text-lg font-medium"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ 
+                    duration: 0.3, 
+                    delay: 0.6 + index * 0.05,
+                    ease: "easeOut"
+                  }}
+                  whileHover={{ 
+                    scale: 1.1,
+                    boxShadow: "0 5px 15px rgba(0,0,0,0.1)"
+                  }}
+                  whileTap={{ 
+                    scale: 0.95
+                  }}
                 >
                   {num}
-                </button>
+                </motion.button>
               ))}
             </div>
           </div>
 
           {/* Info */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
+          <motion.div 
+            className="mt-8 pt-6 border-t border-gray-200"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
+          >
             <p className="text-xs text-gray-500">
               Masa numaranızı girin ve sipariş vermeye başlayın
             </p>
-          </div>
-        </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 }
 
