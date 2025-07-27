@@ -4,7 +4,77 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+    <title>Restaurant QR Order App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: '#fef2f2',
+                500: '#ef4444',
+                600: '#dc2626',
+                700: '#b91c1c',
+              },
+              secondary: {
+                50: '#f8fafc',
+                500: '#64748b',
+                600: '#475569',
+                700: '#334155',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Custom styles for our components */
+      .btn-primary {
+        background-color: #ef4444;
+        color: white;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        transition: background-color 0.2s;
+        border: none;
+        cursor: pointer;
+      }
+      
+      .btn-primary:hover {
+        background-color: #dc2626;
+      }
+      
+      .btn-secondary {
+        background-color: #e5e7eb;
+        color: #374151;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        transition: background-color 0.2s;
+        border: none;
+        cursor: pointer;
+      }
+      
+      .btn-secondary:hover {
+        background-color: #d1d5db;
+      }
+      
+      .card {
+        background-color: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        border: 1px solid #e5e7eb;
+      }
+      
+      body {
+        background-color: #f9fafb;
+        color: #111827;
+        margin: 0;
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

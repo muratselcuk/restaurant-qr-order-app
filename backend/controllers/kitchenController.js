@@ -10,13 +10,14 @@ export const getOpenOrders = async (req, res) => {
       return res.status(404).json({ error: 'Tenant not found' });
     }
 
-   // Fetch open orders
+   // Fetch all orders (both open and done)
     const orders = await db('orders')
       .where({
-        tenant_id: tenantRow.id,
-        status: 'open'
+        tenant_id: tenantRow.id
       })
-      .select('id', 'table_id', 'created_at');
+      .whereIn('status', ['open', 'preparing', 'done'])
+      .select('id', 'table_id', 'status', 'created_at')
+      .orderBy('created_at', 'desc');
 
     // Get order_items + menu_items information
     const ordersWithItems = await Promise.all(
@@ -36,7 +37,7 @@ export const getOpenOrders = async (req, res) => {
           order_id: order.id,
           table_id: order.table_id,
           name: tableRow ? tableRow.name : null,
-          status: 'open',
+          status: order.status,
           items,
           created_at: order.created_at
         };
