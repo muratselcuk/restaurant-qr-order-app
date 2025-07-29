@@ -4,6 +4,7 @@ import orderRoutes from './routes/order.js';
 import kitchenRoutes from './routes/kitchen.js';
 import menuRoutes from './routes/menu.js';
 import qrRoutes from './routes/qr.js';
+import tenantRoutes from './routes/tenant.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -27,6 +28,7 @@ app.use('/api/menu', menuRoutes);
 app.use('/api/order', orderRoutes);
 app.use('/api/kitchen', kitchenRoutes);
 app.use('/api/qr', qrRoutes);
+app.use('/api/tenant', tenantRoutes);
 
 // SADECE test ortamı dışında dinle!
 if (process.env.NODE_ENV !== 'test') {
