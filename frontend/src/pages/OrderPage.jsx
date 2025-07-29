@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion'; // eslint-disable-line no-unused-vars
 
 import CategoryList from '../components/CategoryList';
@@ -11,6 +11,43 @@ function OrderPage() {
   const [menu, setMenu] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Sipariş durumu takibi için yeni state'ler
+  const [currentOrder, setCurrentOrder] = useState(null);
+  const [orderStatus, setOrderStatus] = useState(null);
+  const [showOrderConfirmation, setShowOrderConfirmation] = useState(false);
+  const [statusPolling, setStatusPolling] = useState(false);
+
+  // Sipariş durumunu kontrol eden fonksiyon
+  const checkOrderStatus = useCallback(async (orderId) => {
+    try {
+      const response = await fetch(`/api/order/${tenantCode}/${tableId}/${orderId}/status`);
+      if (response.ok) {
+        const data = await response.json();
+        setOrderStatus(data.status);
+        
+        // Eğer sipariş tamamlandıysa polling'i durdur
+        if (data.status === 'done') {
+          setStatusPolling(false);
+        }
+      }
+    } catch (error) {
+      console.error('Sipariş durumu kontrol edilemedi:', error);
+    }
+  }, [tenantCode, tableId]);
+
+  // Polling effect'i
+  useEffect(() => {
+    let interval;
+    if (statusPolling && currentOrder) {
+      interval = setInterval(() => {
+        checkOrderStatus(currentOrder.order_id);
+      }, 5000); // 5 saniyede bir kontrol et
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [statusPolling, currentOrder, checkOrderStatus]);
 
     useEffect(() => {
     const fetchMenu = async () => {
@@ -66,8 +103,6 @@ const handleSubmitOrder = async () => {
     }))
   };
 
-
-
   try {
     const response = await fetch(`/api/order/${tenantCode}/${tableId}`, {
       method: 'POST',
@@ -78,8 +113,22 @@ const handleSubmitOrder = async () => {
     });
 
     if (response.ok) {
-      alert('Sipariş başarıyla gönderildi!');
-      setCart([]); // Sepeti temizle
+      const orderData = await response.json();
+      
+      // Sipariş onay banner'ını göster
+      setShowOrderConfirmation(true);
+      setCurrentOrder(orderData);
+      setOrderStatus('open');
+      setStatusPolling(true);
+      
+      // Sepeti temizle
+      setCart([]);
+      
+      // 5 saniye sonra banner'ı gizle
+      setTimeout(() => {
+        setShowOrderConfirmation(false);
+      }, 5000);
+      
     } else {
       alert('Sipariş gönderilirken hata oluştu.');
     }
@@ -129,6 +178,22 @@ const handleRemoveFromCart = (itemId) => {
         </motion.div>
       );
 
+  // Sipariş durumu metni
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'open':
+        return 'Siparişiniz alındı';
+      case 'preparing':
+        return 'Siparişiniz hazırlanıyor';
+      case 'done':
+        return 'Siparişiniz hazır!';
+      default:
+        return 'Sipariş durumu kontrol ediliyor';
+    }
+  };
+
+
+
   return (
     <motion.div 
       className="min-h-screen bg-gray-50"
@@ -136,6 +201,72 @@ const handleRemoveFromCart = (itemId) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
+      {/* Sipariş Onay Banner'ı */}
+      {showOrderConfirmation && (
+        <motion.div
+          className="fixed top-0 left-0 right-0 z-50 bg-green-500 text-white p-4 text-center"
+          initial={{ opacity: 0, y: -100 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -100 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex items-center justify-center space-x-2">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <span className="font-semibold">Siparişiniz başarıyla alındı!</span>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Sipariş Durumu Göstergesi */}
+      {currentOrder && orderStatus && (
+        <motion.div
+          className="fixed top-4 right-4 z-40 bg-white rounded-lg shadow-lg p-4 max-w-sm border-l-4 border-l-blue-500"
+          initial={{ opacity: 0, x: 100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex items-center space-x-3">
+            <div className={`w-3 h-3 rounded-full ${
+              orderStatus === 'open' ? 'bg-blue-500' :
+              orderStatus === 'preparing' ? 'bg-yellow-500' :
+              orderStatus === 'done' ? 'bg-green-500' : 'bg-gray-500'
+            } animate-pulse`}></div>
+            <div className="flex-1">
+              <p className="text-sm font-medium text-gray-900">
+                {getStatusText(orderStatus)}
+              </p>
+              <p className="text-xs text-gray-500">
+                Sipariş #{currentOrder.order_id}
+              </p>
+              {orderStatus === 'done' && (
+                <p className="text-xs text-green-600 font-medium mt-1">
+                  ✅ Siparişiniz hazır!
+                </p>
+              )}
+            </div>
+            {statusPolling && orderStatus !== 'done' && (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
+            )}
+            {orderStatus === 'done' && (
+              <button 
+                onClick={() => {
+                  setCurrentOrder(null);
+                  setOrderStatus(null);
+                  setStatusPolling(false);
+                }}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
+        </motion.div>
+      )}
+
       {/* Header */}
       <motion.div 
         className="bg-white shadow-sm border-b"
