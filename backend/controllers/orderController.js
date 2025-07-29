@@ -81,3 +81,44 @@ export const createOrder = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+// Sipariş durumu kontrolü için yeni fonksiyon
+export const getOrderStatus = async (req, res) => {
+  const { tenant, table_id, order_id } = req.params;
+
+  try {
+    const tenantRow = await db('tenants').where('name', tenant).first();
+    if (!tenantRow) {
+      return res.status(404).json({ error: 'Tenant not found' });
+    }
+
+    const table = await db('tables')
+      .where({ id: table_id, tenant_id: tenantRow.id })
+      .first();
+
+    if (!table) {
+      return res.status(404).json({ error: 'Table not found' });
+    }
+
+    const order = await db('orders')
+      .where({ 
+        id: order_id, 
+        tenant_id: tenantRow.id,
+        table_id: table_id 
+      })
+      .first();
+
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    res.json({
+      order_id: order.id,
+      status: order.status,
+      created_at: order.created_at
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
