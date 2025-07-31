@@ -2,109 +2,95 @@
 
 ## Background
 
-Many restaurants manage tables and orders using traditional methods. This increases inefficiency, confusion, and error rates. Modern restaurants want to manage order taking, table management, and kitchen coordination from a single platform. To meet this need, a SaaS-based, mobile-friendly restaurant management system is being developed.
+Modern restoranlar için QR kod ile sipariş, mutfak ekranı ve çoklu tenant (her restoran izole) desteği sunan, mobil uyumlu bir SaaS platformu.
 
-## Requirements
+---
+
+## Requirements (Gereksinimler)
 
 ### Must Have
-- Customer order via QR code linked to the table
-- Menu management (categories, items, prices)
-- Kitchen screen order tracking
-- Multi-tenant structure (each restaurant separated)
+- Müşteri, QR kod ile masa seçip sipariş verebilmeli
+- Menü yönetimi (kategori, ürün, fiyat)
+- Mutfak ekranında sipariş takibi
+- Çoklu tenant (her restoran izole)
+- Tüm API istekleri için loglama (method, URL, status, yanıt süresi)
 
 ### Should Have
-- Order status tracking (preparing, ready, etc.)
-- Menu notes / variation support
-- Mobile-friendly responsive UI
+- Sipariş durum takibi (hazırlanıyor, hazır, vb.)
+- Menüde not/çeşit desteği
+- Mobil uyumlu arayüz
 
 ### Won't Have (initially)
-- Table reservation
-- Customer information storage
-- Payment and invoicing system
-- Third-party / POS integrations
-- Waiter panel
-- Admin panel
+- Rezervasyon
+- Müşteri bilgisi saklama
+- Ödeme ve faturalama
+- 3. parti/POS entegrasyonu
+- Garson ve admin paneli
 
-## Method
+---
 
-### Database Design (SQLite → PostgreSQL)
+## Method & Architecture
 
-Initially using SQLite. Migration to PostgreSQL planned after initial development.
+### Database Design (PostgreSQL)
 
-| Table | Description |
-|--------|------------------------------------------------------------|
-| tenants | id, name, domain, created_at |
-| users | id, tenant_id, name, email, password_hash, role (admin/waiter/kitchen), created_at |
-| tables | id, tenant_id, name, qr_code, is_active |
-| menu_categories | id, tenant_id, name, display_order |
-| menu_items | id, tenant_id, category_id, name, price, description |
-| orders | id, tenant_id, table_id, status (open/in_progress/served), created_at |
-| order_items | id, order_id, menu_item_id, quantity, note |
+| Table           | Description                                      |
+|-----------------|--------------------------------------------------|
+| tenants         | id, name, domain, created_at                     |
+| tables          | id, tenant_id, name, qr_code, is_active          |
+| menu_categories | id, tenant_id, name, display_order               |
+| menu_items      | id, tenant_id, category_id, name, price, desc    |
+| orders          | id, tenant_id, table_id, status, created_at      |
+| order_items     | id, order_id, menu_item_id, quantity, note       |
 
 ### QR Code Order Flow
 
-QR code: `https://app.com/order/{tenant_code}/{table_id}`
+1. Müşteri QR kodu okur (`/start/:tenant`)
+2. Masa numarası girer, menü listelenir
+3. Sipariş verilir (API: `POST /api/order/:tenant/:table_id`)
+4. Sipariş mutfak ekranında görünür (`/kitchen/:tenant`)
 
-1. Customer scans the QR code
-2. System fetches table and restaurant info
-3. Order screen opens, menu is listed
-4. Customer places the order, which appears on the kitchen screen
+### Bileşenler
 
-### Components and Architecture
+- **Frontend:**
+  - Müşteri QR arayüzü
+  - Mutfak paneli
+- **Backend:**
+  - REST API (Node.js + Express)
+  - Loglama middleware’i
+- **Veritabanı:**
+  - PostgreSQL (veya SQLite dev için)
 
-**Frontend:**  
-- Kitchen Panel  
-- Customer QR Interface  
+---
 
-**Backend (API):**  
-- REST API  
-- Tenant Orchestration  
+## Uçtan Uca Demo Akışı
 
-**Database:**  
-- SQLite (dev) / PostgreSQL (prod)  
+1. `docker-compose up` ile tüm servisleri başlat
+2. Müşteri: `http://localhost:3000/start/Restaurant%20A` → masa gir → menüden sipariş ver
+3. Mutfak: `http://localhost:3000/kitchen/Restaurant%20A` → siparişi gör
+4. Sipariş verildiğinde backend konsolunda log oluşur:
+   ```
+   [2025-07-31T08:55:56.589Z] POST /api/order/Restaurant%20A/1 200 - Yanıt süresi: 104.13 ms
+   ```
+5. Çoklu tenant için farklı tenant kodları ile aynı akış tekrar edilebilir
 
-**Connections:**  
-- Kitchen Panel → REST API → Database  
-- Customer QR Interface → REST API → Database  
+---
 
-## Implementation
+## Geliştirme ve Test
 
-1. **Project Setup**
-   - Monorepo setup (e.g. Turborepo / Nx)
-   - Backend (Node.js + Express) and frontend (React) project initiation
+- Her klasör bağımsız geliştirilir (backend, frontend)
+- Testler: `npm test` (her klasörde)
+- Demo ve test akışı için [DEMO.md](./DEMO.md) dosyasına bakınız
 
-2. **Database Layer**
-   - Start development with SQLite
-   - Define data model and migrations using ORM (Knex)
-   - Prepare migration plan to PostgreSQL
-
-3. **QR Flow Development (Phase 1)**
-   - Menu management (initial hardcoded data in backend)
-   - QR link generation
-   - Customer order flow via QR and order creation
-   - Kitchen panel displays orders
-
-4. **Advanced Modules (Phase 2)**
-   - Admin panel (menu and table management)
-   - Waiter panel (table selection, order taking)
-   - Order status management and updates
-   - Role-based authorization
-
-5. **Deployment (Initial Version)**
-   - Dockerized application
-   - Staging deployment on domain-mapped Raspberry Pi
-   - Running backend and database on Raspberry Pi with SQLite
+---
 
 ## Milestones
+- M1: Sistem iskeleti ve temel veri modeli
+- M2: QR tabanlı müşteri siparişi ve mutfak paneli
+- M3: Ek modüller (admin, garson, durum yönetimi)
+- M4: İlk deploy ve pilot test
 
-- M1: System skeleton and basic data model (1 week)
-- M2: QR-based customer order and kitchen panel (2 weeks)
-- M3: Admin/waiter panels and order management (2 weeks)
-- M4: Initial version deploy (1 week)
+---
 
-## Gathering Results
-
-- Conduct pilot testing with test restaurants
-- Collect feedback from waiters, kitchen staff, and customers
-- Measure functionality, performance, and error rates
-- Prioritize additional features post-MVP
+## Notlar
+- Proje MVP olarak tamamlanmıştır
+- Ek özellikler ve entegrasyonlar için issue/pull request açılabilir
