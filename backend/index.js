@@ -15,6 +15,17 @@ const baseUrl = process.env.BASE_URL || 'http://localhost';
 app.use(cors()); // Tüm kaynaklara izin verir
 app.use(express.json());
 
+app.use((req, res, next) => {
+  const startHrTime = process.hrtime();
+  res.on('finish', () => {
+    const elapsedHrTime = process.hrtime(startHrTime);
+    const elapsedMs = (elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6).toFixed(2);
+    const now = new Date().toISOString();
+    console.log(`[${now}] ${req.method} ${req.originalUrl} ${res.statusCode} - Yanıt süresi: ${elapsedMs} ms`);
+  });
+  next();
+});
+
 app.get('/', (req, res) => {
   res.json({
     message: 'Backend is running.',
